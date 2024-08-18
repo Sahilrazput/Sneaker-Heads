@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Redstore</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <!--added a cdn link by searching font awesome4 cdn and getting this link from https://www.bootstrapcdn.com/fontawesome/ this url*/-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="cart">
+        <div class="navbar">
+            <div class="logo">
+                <a href="index.html"><img src="images/logo.png" width="125px"></a>
+            </div>
+            <!-- <section class="cart"> -->
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="account.html">Account</a></li>
+                </ul>
+            </nav>
+            <a href="cart.html"><img src="images/shopping-cart.png" width="30px" height="30px"></a>
+            <img src="images/menu.png" class="menu-icon" onClick="menutoggle()">
+            <!-- </section> -->
+        </div>
+    </div>
+
+    <!-- Cart Table -->
+    <div class="small-container cart-page">
+        <table id="cart-table">
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+            </tr>
+            <!-- Cart items will be dynamically added here -->
+        </table>
+
+        <div class="total-price">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td id="cart-subtotal">$0.00</td>
+                </tr>
+                <tr>
+                    <td>Tax</td>
+                    <td id="cart-tax">$0.00</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td id="cart-total">$0.00</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!----------------------------------footer------------------------------------->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col-1">
+                    <h3>Download Our App</h3>
+                    <p>Download App for Android and iOS mobile phones.</p>
+                    <div class="app-logo">
+                        <img src="images/play-store.png" alt="">
+                        <img src="images/app-store.png" alt="">
+                    </div>
+                </div>
+                <div class="footer-col-2">
+                    <img src="images/logo.png">
+                    <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+                </div>
+                <div class="footer-col-3">
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li>Coupons</li>
+                        <li>Blog Post</li>
+                        <li>Return Policy</li>
+                        <li>Join Affiliate</li>
+                    </ul>
+                </div>
+                <div class="footer-col-4">
+                    <h3>Follow us</h3>
+                    <ul>
+                        <li>Facebook</li>
+                        <li>Twitter</li>
+                        <li>Instagram</li>
+                        <li>Youtube</li>
+                    </ul>
+                </div>
+            </div>
+            <hr><!--horizontal line-->
+            <p class="copyright">Copyright 2023 - Sahil Kr. Singh
+            </p>
+        </div>
+    </div>
+
+    <!-----------------------------------js for toggle menu----------------------------------------------->
+    <script>
+        var menuItems = document.getElementById("MenuItems");
+        menuItems.style.maxHeight = "0px";
+
+        function menutoggle() {
+            if (menuItems.style.maxHeight == "0px") {
+                menuItems.style.maxHeight = "200px";
+            } else {
+                menuItems.style.maxHeight = "0px";
+            }
+        }
+    </script>
+    <script>
+        function addToCart(productName, price, imageUrl) {
+            // Get quantity and size values
+            var quantity = document.getElementById("quantity").value;
+            var size = document.getElementById("size").value;
+    
+            // Calculate subtotal
+            var subtotal = quantity * price;
+    
+            // Create a new row for the cart table
+            var cartTable = document.getElementById("cart-table");
+            var newRow = cartTable.insertRow(1);
+    
+            // Insert cells
+            var cellProduct = newRow.insertCell(0);
+            var cellQuantity = newRow.insertCell(1);
+            var cellPrice = newRow.insertCell(2);
+            var cellSubtotal = newRow.insertCell(3);
+            var cellAction = newRow.insertCell(4);
+    
+            // Set cell values
+            cellProduct.innerHTML = '<img src="' + imageUrl + '" alt="' + productName + '" class="cart-item-image"><p>' + productName + '</p>';
+            cellQuantity.innerHTML = quantity + " (" + size + ")";
+            cellPrice.innerHTML = "$" + price.toFixed(2);
+            cellSubtotal.innerHTML = "$" + subtotal.toFixed(2);
+            cellAction.innerHTML = '<button onclick="removeFromCart(this)">Remove</button>';
+    
+            // Update total values
+            updateTotal();
+        }
+    
+        function removeFromCart(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+    
+            // Update total values
+            updateTotal();
+        }
+    
+        function updateTotal() {
+            var cartSubtotal = 0;
+    
+            var cartTable = document.getElementById("cart-table");
+            for (var i = 1; i < cartTable.rows.length; i++) {
+                cartSubtotal += parseFloat(cartTable.rows[i].cells[3].innerHTML.substring(1));
+            }
+    
+            var cartTax = cartSubtotal * 0.1; // Assuming 10% tax
+            var cartTotal = cartSubtotal + cartTax;
+    
+            document.getElementById("cart-subtotal").innerHTML = "$" + cartSubtotal.toFixed(2);
+            document.getElementById("cart-tax").innerHTML = "$" + cartTax.toFixed(2);
+            document.getElementById("cart-total").innerHTML = "$" + cartTotal.toFixed(2);
+        }
+    </script>
+    <!-- Add the provided cart.js code here -->
+    <script>
+        // cart.js
+
+// Assume this function is called when the "Add to Cart" button is clicked on the product details page
+function addToCart(productName, productPrice, productImage) {
+    // Create an object representing the item to be added to the cart
+    var cartItem = {
+        name: productName,
+        price: productPrice,
+        image: productImage,
+        quantity: 1
+    };
+
+    // Retrieve existing cart items from local storage or initialize an empty array
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Check if the item is already in the cart
+    var existingItemIndex = cart.findIndex(function (item) {
+        return item.name === cartItem.name;
+    });
+
+    // If the item is already in the cart, update the quantity; otherwise, add a new item
+    if (existingItemIndex !== -1) {
+        cart[existingItemIndex].quantity++;
+    } else {
+        cart.push(cartItem);
+    }
+
+    // Save the updated cart back to local storage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Optionally, redirect the user to the cart page
+    window.location.href = "cart.html";
+}
+
+// Function to initialize the cart on the cart.html page
+function displayCart() {
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    var cartTable = document.getElementById("cart-table");
+
+    // Clear existing rows in the table
+    cartTable.innerHTML = "";
+
+    // Add a header row
+    var headerRow = cartTable.insertRow(0);
+    headerRow.insertCell(0).innerHTML = "Product";
+    headerRow.insertCell(1).innerHTML = "Quantity";
+    headerRow.insertCell(2).innerHTML = "Subtotal";
+    headerRow.insertCell(3).innerHTML = "Remove";
+
+    // Add rows for each item in the cart
+    for (var i = 0; i < cart.length; i++) {
+        var row = cartTable.insertRow(i + 1);
+        row.insertCell(0).innerHTML = '<img src="' + cart[i].image + '" alt="' + cart[i].name + '" width="50">';
+        row.insertCell(1).innerHTML = '<input type="number" value="' + cart[i].quantity + '">';
+        row.insertCell(2).innerHTML = '$' + (cart[i].price * cart[i].quantity).toFixed(2);
+        row.insertCell(3).innerHTML = '<a href="#" onclick="removeItem(' + i + ')">Remove</a>';
+    }
+
+    // Calculate and display the total price
+    var totalPrice = cart.reduce(function (total, item) {
+        return total + item.price * item.quantity;
+    }, 0);
+
+    var totalRow = cartTable.insertRow(cart.length + 1);
+    totalRow.insertCell(0).innerHTML = "Total";
+    totalRow.insertCell(1).innerHTML = "";
+    totalRow.insertCell(2).innerHTML = '$' + totalPrice.toFixed(2);
+    totalRow.insertCell(3).innerHTML = "";
+}
+
+// Function to remove an item from the cart
+function removeItem(index) {
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayCart(); // Refresh the cart display after removing an item
+}
+
+// Call displayCart when the cart.html page is loaded
+document.addEventListener("DOMContentLoaded", function () {
+    displayCart();
+});
+
+    </script>
+</body>
+
+</html>
